@@ -1,1 +1,15 @@
 homework7-programming.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Generated assignment outputs
+figures/
+reports/
+outputs/
