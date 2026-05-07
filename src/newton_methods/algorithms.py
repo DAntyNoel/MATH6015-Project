@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 import numpy as np
 
 from .core import Array, IterationRecord, Objective, OptimizationResult
@@ -157,6 +159,131 @@ def modified_damped_newton(
                 step_size=step,
                 direction=direction,
                 metadata={"lambda_min": lambda_min, "tau": tau},
+            )
+        )
+        x = x + step * direction
+
+    return _result(objective, x, max_iterations, False, "maximum iterations reached", history)
+
+
+def conjugate_gradient(
+    matvec: Callable[[Array], Array],
+    rhs: Array,
+    *,
+    tolerance: float,
+    max_iterations: int,
+) -> tuple[Array, int, float, bool]:
+    """Approximately solve A x = rhs using conjugate gradient."""
+
+    if tolerance < 0.0:
+        raise ValueError("tolerance must be nonnegative")
+    if max_iterations <= 0:
+        raise ValueError("max_iterations must be positive")
+
+    x = np.zeros_like(rhs, dtype=float)
+    residual = rhs - matvec(x)
+    direction = residual.copy()
+    residual_norm_squared = float(np.dot(residual, residual))
+
+    if np.sqrt(residual_norm_squared) <= tolerance:
+        return x, 0, float(np.sqrt(residual_norm_squared)), True
+
+    for iteration in range(1, max_iterations + 1):
+        matvec_direction = matvec(direction)
+        curvature = float(np.dot(direction, matvec_direction))
+        if curvature <= 0.0:
+            return x, iteration - 1, float(np.sqrt(residual_norm_squared)), False
+
+        step = residual_norm_squared / curvature
+        x = x + step * direction
+        residual = residual - step * matvec_direction
+        next_residual_norm_squared = float(np.dot(residual, residual))
+        residual_norm = float(np.sqrt(next_residual_norm_squared))
+
+        if residual_norm <= tolerance:
+            return x, iteration, residual_norm, True
+
+        beta = next_residual_norm_squared / residual_norm_squared
+        direction = residual + beta * direction
+        residual_norm_squared = next_residual_norm_squared
+
+    return x, max_iterations, float(np.sqrt(residual_norm_squared)), False
+
+
+def newton_cg(
+    objective: Objective,
+    hessian_vector_product: Callable[[Array, Array], Array],
+    x0: Array,
+    *,
+    eta_rule: Callable[[float, int], float],
+    tolerance: float = 1e-10,
+    max_iterations: int = 100,
+    max_cg_iterations: int | None = None,
+    armijo_rho: float = 0.5,
+    armijo_c1: float = 1e-4,
+) -> OptimizationResult:
+    """Minimize an objective using inexact Newton steps computed by CG."""
+
+    x = _as_float_vector(x0)
+    history: list[IterationRecord] = []
+    cumulative_cg_iterations = 0
+
+    for iteration in range(max_iterations + 1):
+        value = objective.value(x)
+        gradient = objective.gradient(x)
+        gradient_norm = float(np.linalg.norm(gradient))
+        record = IterationRecord(
+            iteration=iteration,
+            x=x.copy(),
+            value=value,
+            gradient_norm=gradient_norm,
+            metadata={"cumulative_cg_iterations": cumulative_cg_iterations},
+        )
+
+        if gradient_norm < tolerance:
+            history.append(record)
+            return _result(objective, x, iteration, True, "gradient tolerance reached", history)
+        if iteration == max_iterations:
+            history.append(record)
+            break
+
+        eta = float(eta_rule(gradient_norm, iteration))
+        if not 0.0 <= eta < 1.0:
+            raise ValueError("eta_rule must return a value in [0, 1)")
+
+        cg_limit = x.size if max_cg_iterations is None else max_cg_iterations
+        direction, cg_iterations, residual_norm, cg_converged = conjugate_gradient(
+            lambda vector: hessian_vector_product(x, vector),
+            -gradient,
+            tolerance=eta * gradient_norm,
+            max_iterations=cg_limit,
+        )
+        cumulative_cg_iterations += cg_iterations
+
+        try:
+            step = armijo_backtracking(
+                objective,
+                x,
+                direction,
+                rho=armijo_rho,
+                c1=armijo_c1,
+            )
+        except ValueError as exc:
+            history.append(record)
+            return _result(objective, x, iteration, False, f"line search failed: {exc}", history)
+
+        history.append(
+            _with_step_info(
+                record,
+                step_size=step,
+                direction=direction,
+                metadata={
+                    "eta": eta,
+                    "cg_iterations": cg_iterations,
+                    "cumulative_cg_iterations": cumulative_cg_iterations,
+                    "linear_residual_norm": residual_norm,
+                    "cg_converged": cg_converged,
+                },
             )
         )
         x = x + step * direction

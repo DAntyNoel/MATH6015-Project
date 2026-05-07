@@ -11,6 +11,7 @@
 - `examples/smoke_check.py`：基础框架的快速检查脚本。
 - `exp1/`：Experiment 1 的完整运行脚本、说明和输出文件。
 - `experiment2/`：Experiment 2 的完整运行脚本、说明和输出文件。
+- `exp3/`：Experiment 3 的完整运行脚本、说明和输出文件。
 
 ## 运行基础检查
 
@@ -29,10 +30,18 @@ python3 exp1/run.py
 ## 运行 Experiment 2
 
 ```bash
-python3 experiment2/run_experiment2.py
+python3 exp2/run.py
 ```
 
-输出图像和表格会生成到 `experiment2/outputs/`。
+输出图像和表格会生成到 `exp2/outputs/`。
+
+## 运行 Experiment 3
+
+```bash
+python3 exp3/run.py
+```
+
+输出图像和表格会生成到 `exp3/outputs/`。
 
 ## 实现原则
 

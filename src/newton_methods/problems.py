@@ -63,3 +63,44 @@ def experiment2_objective() -> FunctionObjective:
         return np.array([[1.0, 0.0], [0.0, 3.0 * y0**2 - 1.0]])
 
     return FunctionObjective(value, gradient, hessian, name="f2")
+
+
+@dataclass(frozen=True)
+class DiagonalQuarticObjective:
+    """High-dimensional diagonal quadratic plus componentwise quartic objective."""
+
+    diagonal: Array
+    c: float = 0.5
+    name: str = "f3"
+
+    def value(self, x: Array) -> float:
+        x = np.asarray(x, dtype=float)
+        return float(0.5 * np.dot(self.diagonal * x, x) + 0.25 * self.c * np.sum(x**4))
+
+    def gradient(self, x: Array) -> Array:
+        x = np.asarray(x, dtype=float)
+        return self.diagonal * x + self.c * x**3
+
+    def hessian(self, x: Array) -> Array:
+        x = np.asarray(x, dtype=float)
+        return np.diag(self.diagonal + 3.0 * self.c * x**2)
+
+    def hessian_vector_product(self, x: Array, vector: Array) -> Array:
+        x = np.asarray(x, dtype=float)
+        vector = np.asarray(vector, dtype=float)
+        return (self.diagonal + 3.0 * self.c * x**2) * vector
+
+
+def experiment3_objective(n: int = 200, c: float = 0.5) -> DiagonalQuarticObjective:
+    """Return f3 from the assignment."""
+
+    diagonal = np.logspace(-3, 1, n)
+    return DiagonalQuarticObjective(diagonal=diagonal, c=c, name="f3")
+
+
+def experiment3_initial_point(n: int = 200) -> Array:
+    """Return x0 = (1, 2, 1, 2, ...)^T for Experiment 3."""
+
+    x0 = np.ones(n)
+    x0[1::2] = 2.0
+    return x0
