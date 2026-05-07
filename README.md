@@ -10,7 +10,7 @@
 - `src/newton_methods/problems.py`：目标函数封装和作业中的测试函数。
 - `examples/smoke_check.py`：基础框架的快速检查脚本。
 - `exp1/`：Experiment 1 的完整运行脚本、说明和输出文件。
-- `experiment2/`：Experiment 2 的完整运行脚本、说明和输出文件。
+- `exp2/`：Experiment 2 的完整运行脚本、说明和输出文件。
 - `exp3/`：Experiment 3 的完整运行脚本、说明和输出文件。
 
 ## 运行基础检查
