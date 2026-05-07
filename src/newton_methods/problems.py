@@ -45,3 +45,21 @@ def experiment1_objective() -> FunctionObjective:
         return np.array([[12.0 * x0**2 + 2.0, 0.5], [0.5, 12.0 * y0**2 + 2.0]])
 
     return FunctionObjective(value, gradient, hessian, name="f1")
+
+
+def experiment2_objective() -> FunctionObjective:
+    """Return f2 from the assignment."""
+
+    def value(x: Array) -> float:
+        x0, y0 = x
+        return 0.5 * x0**2 + 0.25 * y0**4 - 0.5 * y0**2
+
+    def gradient(x: Array) -> Array:
+        x0, y0 = x
+        return np.array([x0, y0**3 - y0])
+
+    def hessian(x: Array) -> Array:
+        _, y0 = x
+        return np.array([[1.0, 0.0], [0.0, 3.0 * y0**2 - 1.0]])
+
+    return FunctionObjective(value, gradient, hessian, name="f2")

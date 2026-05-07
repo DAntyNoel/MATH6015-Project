@@ -13,3 +13,5 @@ venv/
 figures/
 reports/
 outputs/
+.matplotlib-cache/
+.cache/
