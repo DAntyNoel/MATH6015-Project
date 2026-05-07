@@ -22,15 +22,15 @@ f2(x, y) = 0.5x^2 + 0.25y^4 - 0.5y^2
 在项目根目录运行：
 
 ```bash
-python3 experiment2/run_experiment2.py
+python exp2/run.py
 ```
 
-生成的图像和表格会写入 `experiment2/outputs/`。如果当前 Python 环境安装了 Matplotlib，脚本会生成 PNG；否则会使用内置 SVG 后备绘图生成 SVG。
+生成的图像和表格会写入 `exp2/outputs/`。
 
 ## 输出文件
 
-- `experiment2_paths.png` 或 `experiment2_paths.svg`：经典 Newton 与修改阻尼 Newton 的迭代路径等高线图
-- `experiment2_distance_to_minimizer.png` 或 `experiment2_distance_to_minimizer.svg`：两种方法到 `(0, 1)^T` 的距离曲线
+- `experiment2_paths.png`：经典 Newton 与修改阻尼 Newton 的迭代路径等高线图
+- `experiment2_distance_to_minimizer.png`：两种方法到 `(0, 1)^T` 的距离曲线
 - `iteration_history.csv`：两种方法的逐步迭代数据
 - `summary.txt`：最终点、函数值、梯度范数和简短观察
 

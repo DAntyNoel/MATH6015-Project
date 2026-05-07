@@ -21,15 +21,15 @@ f1(x, y) = x^4 + y^4 + x^2 + y^2 + 0.5xy
 在项目根目录运行：
 
 ```bash
-python3 exp1/run.py
+python exp1/run.py
 ```
 
-生成的图像和表格会写入 `exp1/outputs/`。如果当前 Python 环境安装了 Matplotlib，脚本会生成 PNG；否则会使用内置 SVG 后备绘图生成 SVG。
+生成的图像和表格会写入 `exp1/outputs/`。
 
 ## 输出文件
 
-- `experiment1_paths.png` 或 `experiment1_paths.svg`：梯度下降与 Newton 方法的迭代路径等高线图
-- `experiment1_errors.png` 或 `experiment1_errors.svg`：两种方法的误差半对数曲线
+- `experiment1_paths.png`：梯度下降与 Newton 方法的迭代路径等高线图
+- `experiment1_errors.png`：两种方法的误差半对数曲线
 - `newton_observed_orders.csv`：Newton 方法每一步的误差和观测收敛阶
 - `summary.txt`：本次实验的数值摘要
 

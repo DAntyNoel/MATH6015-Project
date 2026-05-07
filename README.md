@@ -8,21 +8,30 @@
 - `src/newton_methods/line_search.py`：Armijo 回溯线搜索。
 - `src/newton_methods/algorithms.py`：固定步长梯度下降、经典 Newton 方法、修改阻尼 Newton 方法。
 - `src/newton_methods/problems.py`：目标函数封装和作业中的测试函数。
+- `src/newton_methods/experiment_utils.py`：实验脚本共享的输出目录、绘图缓存和结果格式化工具。
 - `examples/smoke_check.py`：基础框架的快速检查脚本。
 - `exp1/`：Experiment 1 的完整运行脚本、说明和输出文件。
 - `exp2/`：Experiment 2 的完整运行脚本、说明和输出文件。
 - `exp3/`：Experiment 3 的完整运行脚本、说明和输出文件。
 
+## 运行环境
+
+推荐使用 conda 的 `main` 环境运行本项目：
+
+```bash
+conda activate main
+```
+
 ## 运行基础检查
 
 ```bash
-python3 examples/smoke_check.py
+python examples/smoke_check.py
 ```
 
 ## 运行 Experiment 1
 
 ```bash
-python3 exp1/run.py
+python exp1/run.py
 ```
 
 输出图像和表格会生成到 `exp1/outputs/`。
@@ -30,7 +39,7 @@ python3 exp1/run.py
 ## 运行 Experiment 2
 
 ```bash
-python3 exp2/run.py
+python exp2/run.py
 ```
 
 输出图像和表格会生成到 `exp2/outputs/`。
@@ -38,7 +47,7 @@ python3 exp2/run.py
 ## 运行 Experiment 3
 
 ```bash
-python3 exp3/run.py
+python exp3/run.py
 ```
 
 输出图像和表格会生成到 `exp3/outputs/`。

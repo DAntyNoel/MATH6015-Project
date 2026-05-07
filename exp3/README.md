@@ -28,15 +28,15 @@ f3(x) = 0.5 x^T A x + c/4 * sum_i x_i^4
 在项目根目录运行：
 
 ```bash
-python3 exp3/run.py
+python exp3/run.py
 ```
 
-生成的图像和表格会写入 `exp3/outputs/`。如果当前 Python 环境安装了 Matplotlib，脚本会生成 PNG；否则会使用内置 SVG 后备绘图生成 SVG。
+生成的图像和表格会写入 `exp3/outputs/`。
 
 ## 输出文件
 
-- `gradient_norms.png` 或 `gradient_norms.svg`：三种 `eta_k` 下的梯度范数半对数曲线
-- `cumulative_cg_iterations.png` 或 `cumulative_cg_iterations.svg`：累计 CG 次数曲线
+- `gradient_norms.png`：三种 `eta_k` 下的梯度范数半对数曲线
+- `cumulative_cg_iterations.png`：累计 CG 次数曲线
 - `iteration_history.csv`：逐步迭代数据
 - `summary.txt`：每种 `eta_k` 的外层迭代次数、总 CG 次数、最终函数值和最终梯度范数
 
